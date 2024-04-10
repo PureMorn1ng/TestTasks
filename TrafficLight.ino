@@ -7,38 +7,38 @@ G2->Y2->R2->Y2 - режим работы светофора для овец, в�
 1: R1 G2
 2: Y1 Y2
 3: G1 R2
+4: Y1 Y2
 Условием перехода является достижение времени работы
 @Petrov Ivan 2024
 */
 
 
-int State = 1;
-unsigned long CowsClosedSheepsOpened = 15000;
+int State = 1; // начальное состояние системы
+unsigned long CowsClosedSheepsOpened = 15000; //постоянные времени работы светофоров
 unsigned long BothTrafficLightsYellow_firstTime = 20000;
 unsigned long CowsOpenedSheepsClosed = 35000;
 unsigned long BothTrafficLightsYellow_secondTime = 40000;
 
-unsigned long t_init = 0;
+unsigned long t_init = 0; //время начала работы
 
-short int R_PIN1 = 8;
-short int G_PIN1 = 9;
-short int Y_PIN1 = 10;
+short int R_PINcows = 8; //пины светофоров для коров
+short int G_PINcows = 9;
+short int Y_PINcows = 10;
 
-short int R_PIN2 = 11;
-short int G_PIN2 = 12;
-short int Y_PIN2 = 13;
+short int R_PINsheeps = 11;//пины светофоров для овец
+short int G_PINsheeps = 12;
+short int Y_PINsheeps = 13;
 
 
 
 void setup() {
-  pinMode(R_PIN1, OUTPUT);
-  pinMode(G_PIN1, OUTPUT);
-  pinMode(Y_PIN1, OUTPUT);
+  pinMode(R_PINcows, OUTPUT);
+  pinMode(G_PINcows, OUTPUT);
+  pinMode(Y_PINcows, OUTPUT);
 
-  pinMode(R_PIN2, OUTPUT);
-  pinMode(G_PIN2, OUTPUT);
-  pinMode(Y_PIN2, OUTPUT);
-  Serial.begin(9600);
+  pinMode(R_PINsheeps, OUTPUT);
+  pinMode(G_PINsheeps, OUTPUT);
+  pinMode(Y_PINsheeps, OUTPUT);
 }
 
 void loop() {
@@ -52,18 +52,18 @@ void doState() {
 
   switch (State) {
     case 1:
-      controlTrafficLigths(R_PIN1, G_PIN1, Y_PIN1, 1, 0, 0);
-      controlTrafficLigths(R_PIN2, G_PIN2, Y_PIN2, 0, 1, 0);
+      controlTrafficLigths(R_PINcows, G_PINcows, Y_PINcows, 1, 0, 0);
+      controlTrafficLigths(R_PINsheeps, G_PINsheeps, Y_PINsheeps, 0, 1, 0);
       break;
 
     case 2:
-      controlTrafficLigths(R_PIN1, G_PIN1, Y_PIN1, 0, 0, 1);
-      controlTrafficLigths(R_PIN2, G_PIN2, Y_PIN2, 0, 0, 1);
+      controlTrafficLigths(R_PINcows, G_PINcows, Y_PINcows, 0, 0, 1);
+      controlTrafficLigths(R_PINsheeps, G_PINsheeps, Y_PINsheeps, 0, 0, 1);
       break;
 
     case 3:
-      controlTrafficLigths(R_PIN1, G_PIN1, Y_PIN1, 0, 1, 0);
-      controlTrafficLigths(R_PIN2, G_PIN2, Y_PIN2, 1, 0, 0);
+      controlTrafficLigths(R_PINcows, G_PINcows, Y_PINcows, 0, 1, 0);
+      controlTrafficLigths(R_PINsheeps, G_PINsheeps, Y_PINsheeps, 1, 0, 0);
       break;
   }
 }
@@ -72,10 +72,10 @@ void controlTrafficLigths(short int R_PIN, short int G_PIN, short int Y_PIN, sho
 
   digitalWrite(R_PIN, valR);  // Red pin signal
   digitalWrite(G_PIN, valG);  // Green pin signal
-  digitalWrite(Y_PIN, valY);  // Blue pin signal , можно отказаться, т.к. не используется
+  digitalWrite(Y_PIN, valY);  // Blue pin signal
 }
 
-unsigned long checkState() {
+unsigned long checkState() { //проверка состояния системы по прошедшему времени
 
   if (millis() - t_init < BothTrafficLightsYellow_secondTime) 
   {
