@@ -3,12 +3,12 @@
 позволило совершенно безболезненно разнести работу светофоров по схеме:
 R1->Y1->G1->Y1 - режим работы светофора для коров, время цикла = 40 сек
 G2->Y2->R2->Y2 - режим работы светофора для овец, время цикла = 40 сек
-Иначе говоря, система может находиться в 3 состояниях
-1: R1 G2
+Иначе говоря, система может находиться в 3 состояниях (в коде состоянию присвоена переменная State)
+1: R1 G2 && заслонка для коров закрыта, для овец открыта
 2: Y1 Y2
-3: G1 R2
-4: Y1 Y2
+3: G1 R2 && заслонка для коров открыта, для овец закрыта
 Условием перехода является достижение времени работы
+Задание 2
 @Petrov Ivan 2024
 */
 
@@ -30,6 +30,13 @@ short int G_PINsheeps = 12;
 short int Y_PINsheeps = 13;
 
 
+short int gate4Cows = 2; //номера пинов для заслонок
+short int gate4Sheeps = 3;
+short int gate4Goats = 4;
+
+
+
+
 
 void setup() {
   pinMode(R_PINcows, OUTPUT);
@@ -44,6 +51,22 @@ void setup() {
 void loop() {
   checkState();  
   doState();
+  gatesControl();
+}
+
+void gatesControl(){
+  
+  switch (State) { // влключение заслонок по состоянию системы
+    case 1:
+      digitalWrite(gate4Cows,1); //при подаче единицы заслонка открывается
+      digitalWrite(gate4Sheeps,0);
+      break;
+
+    case 3:
+      digitalWrite(gate4Cows,0);
+      digitalWrite(gate4Sheeps,1);
+      break;  
+  }
 }
 
 void doState() {
