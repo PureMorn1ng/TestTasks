@@ -44,8 +44,6 @@ void setup() {
 void loop() {
   checkState();  
   doState();
-  Serial.println(millis() - t_init);
-    Serial.println(State);
 }
 
 void doState() {
